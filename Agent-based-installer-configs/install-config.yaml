@@ -1,0 +1,31 @@
+apiVersion: v1
+baseDomain: openinfra.lab
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  replicas: 3
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  replicas: 3
+metadata:
+  name: gpu-cluster 
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 172.20.131.0/24
+  networkType: OVNKubernetes 
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  baremetal:
+    apiVIPs:
+    - 172.20.131.31
+    ingressVIPs:
+    - 172.20.131.30
+pullSecret: '{"auths":{"cloud.openshift.com..."' 
+sshKey: 'ssh-rsa AAA...'

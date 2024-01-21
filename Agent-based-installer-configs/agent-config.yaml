@@ -1,0 +1,180 @@
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: gpu-cluster
+rendezvousIP: 172.20.131.20
+hosts:
+  - hostname: ocp-gpu-control1
+    role: master
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:0e:1e:aa:e3:d0
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          type: ethernet
+          state: up
+          mac-address: 00:0e:1e:aa:e3:d0
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.131.20
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.131.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: ocp-gpu-control2
+    role: master
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:0e:1e:aa:de:20
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          type: ethernet
+          state: up
+          mac-address: 00:0e:1e:aa:de:20
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.131.21
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.131.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: ocp-gpu-control3
+    role: master
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:0e:1e:aa:c6:a0
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          type: ethernet
+          state: up
+          mac-address: 00:0e:1e:aa:c6:a0
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.131.22
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.131.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: ocp-gpu-worker1
+    role: worker
+    interfaces:
+      - name: ens4f0
+        macAddress: 90:e2:ba:bf:36:24
+    rootDeviceHints:
+      wwn: "0x600605b00b8bd3102d03689a076f7096"
+    networkConfig:
+      interfaces:
+        - name: ens4f0
+          type: ethernet
+          state: up
+          mac-address: 90:e2:ba:bf:36:24
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.131.23
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.131.1
+            next-hop-interface: ens4f0
+            table-id: 254
+  - hostname: ocp-gpu-worker2
+    role: worker
+    interfaces:
+      - name: ens4f0
+        macAddress: 90:e2:ba:c1:77:64
+    rootDeviceHints:
+      wwn: "0x600605b00b8be4a02d03631321adfb24"
+    networkConfig:
+      interfaces:
+        - name: ens4f0
+          type: ethernet
+          state: up
+          mac-address: 90:e2:ba:c1:77:64
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.131.24
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.131.1
+            next-hop-interface: ens4f0
+            table-id: 254
+  - hostname: ocp-gpu-worker3
+    role: worker
+    interfaces:
+      - name: ens4f0
+        macAddress: 90:e2:ba:c3:cd:00
+    rootDeviceHints:
+      wwn: "0x600605b00b8bdeb02d036673547556b0"
+    networkConfig:
+      interfaces:
+        - name: ens4f0
+          type: ethernet
+          state: up
+          mac-address: 90:e2:ba:c3:cd:00
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.131.25
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.131.1
+            next-hop-interface: ens4f0
+            table-id: 254
