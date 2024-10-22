@@ -1,0 +1,15 @@
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneService
+metadata:
+  name: nova-custom-ceph
+  namespace: openstack
+spec:
+  label: dataplane-deployment-nova-custom-ceph
+  dataSources:
+   - configMapRef:
+       name: ceph-nova
+   - secretRef:
+       name: nova-cell1-compute-config
+   - secretRef:
+       name: nova-migration-ssh-key
+  playbook: osp.edpm.nova

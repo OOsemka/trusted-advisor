@@ -1,0 +1,130 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: osp-ens4f1-worker-2
+spec:
+  desiredState:
+    interfaces:
+    - description: internalapi vlan interface
+      ipv4:
+        address:
+        - ip: 172.20.140.11
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: internalapi
+      state: up
+      type: vlan
+      vlan:
+        base-iface: ens4f1
+        id: 1112
+        reorder-headers: true
+    - description: storage vlan interface
+      ipv4:
+        address:
+        - ip: 172.20.142.11
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: storage
+      state: up
+      type: vlan
+      vlan:
+        base-iface: ens4f1
+        id: 1114
+        reorder-headers: true
+    - description: storagemgmt vlan interface
+      ipv4:
+        address:
+        - ip: 172.20.143.11
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: storagemgmt
+      state: up
+      type: vlan
+      vlan:
+        base-iface: ens4f1
+        id: 1115
+        reorder-headers: true
+    - description: tenant vlan interface
+      ipv4:
+        address:
+        - ip: 172.20.141.11
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: tenant
+      state: up
+      type: vlan
+      vlan:
+        base-iface: ens4f1
+        id: 1113
+        reorder-headers: true
+    - description: ctlplane vlan interface
+      ipv4:
+        address:
+        - ip: 172.20.138.11
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: ctlplane
+      state: up
+      type: vlan
+      vlan:
+        base-iface: ens4f1
+        id: 1110
+        reorder-headers: true
+    - description: external vlan interface
+      ipv4:
+        address:
+        - ip: 172.20.139.11
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: external
+      state: up
+      type: vlan
+      vlan:
+        base-iface: ens4f1
+        id: 1111
+        reorder-headers: true
+    - description: OCprovisioning vlan interface
+      ipv4:
+        address:
+        - ip: 172.20.144.11
+          prefix-length: 24
+        enabled: true
+        dhcp: false
+      ipv6:
+        enabled: false
+      mtu: 1500
+      name: ocprovisioning
+      state: up
+      type: vlan
+      vlan:
+        base-iface: ens4f1
+        id: 1116
+        reorder-headers: true
+
+  nodeSelector:
+    kubernetes.io/hostname: ocp-gpu-worker2
+    node-role.kubernetes.io/worker: ""

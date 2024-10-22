@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: reserved-memory-nova
+  namespace: openstack
+data:
+  04-reserved-memory-nova.conf: |
+    [DEFAULT]
+    reserved_host_memory_mb=8192

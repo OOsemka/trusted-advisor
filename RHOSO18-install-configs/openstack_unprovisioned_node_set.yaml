@@ -1,0 +1,174 @@
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneNodeSet
+metadata:
+  name: openstack-data-plane
+  namespace: openstack
+spec:
+  env: 
+    - name: ANSIBLE_FORCE_COLOR
+      value: "True"
+  services:
+  - bootstrap
+  - configure-network
+  - validate-network
+  - install-os
+  - ceph-hci-pre
+  - configure-os
+  - ssh-known-hosts
+  - run-os
+  - reboot-os
+  - install-certs
+  - ovn
+  - neutron-metadata
+  - libvirt
+  - nova
+  #- telemetry
+  networkAttachments:
+    - ctlplane
+  preProvisioned: false 
+  baremetalSetTemplate: 
+    deploymentSSHSecret: dataplane-ansible-ssh-private-key-secret
+    bmhNamespace: openshift-machine-api 
+    cloudUserName: cloud-admin
+    bmhLabelSelector:
+      app: openstack 
+    ctlplaneInterface: ens1f0
+    dnsSearchDomains:
+      - openinfra.rhoso.lab
+  nodeTemplate: 
+    ansibleSSHPrivateKeySecret: dataplane-ansible-ssh-private-key-secret 
+    extraMounts:
+      - extraVolType: Logs
+        volumes:
+        - name: ansible-logs
+          persistentVolumeClaim:
+            claimName: ansible-logs
+        mounts:
+        - name: ansible-logs
+          mountPath: "/runner/artifacts"
+    managementNetwork: ctlplane
+    ansible:
+      ansibleUser: cloud-admin 
+      ansiblePort: 22
+      ansibleVarsFrom:
+        - prefix: subscription_manager_
+          secretRef:
+            name: subscription-manager
+        - prefix: registry_
+          secretRef:
+            name: redhat-registry
+      ansibleVars: 
+        edpm_bootstrap_command: |
+          subscription-manager register --username {{ subscription_manager_username }} --password {{ subscription_manager_password }}
+          subscription-manager release --set=9.4
+          subscription-manager repos --disable=*
+          subscription-manager repos --enable=rhel-9-for-x86_64-baseos-rpms --enable=rhel-9-for-x86_64-appstream-rpms --enable=rhel-9-for-x86_64-highavailability-rpms --enable=fast-datapath-for-rhel-9-x86_64-rpms --enable=rhoso-18.0-for-rhel-9-x86_64-rpms --enable=rhceph-7-tools-for-rhel-9-x86_64-rpms
+          podman login -u {{ registry_username }} -p {{ registry_password }} registry.redhat.io
+        edpm_bootstrap_release_version_package: []
+        edpm_network_config_os_net_config_mappings:
+          edpm-compute-0:
+            nic1: 00:0e:1e:aa:bf:70 
+          edpm-compute-1:
+            nic1: 00:0e:1e:aa:db:c0
+          edpm-compute-2:
+            nic1: 00:0E:1E:AA:DE:30
+        neutron_physical_bridge_name: br-ex
+        neutron_public_interface_name: eth0
+        edpm_network_config_template: |
+          ---
+          {% set mtu_list = [ctlplane_mtu] %}
+          {% for network in nodeset_networks %}
+          {{ mtu_list.append(lookup('vars', networks_lower[network] ~ '_mtu')) }}
+          {%- endfor %}
+          {% set min_viable_mtu = mtu_list | max %}
+          network_config:
+          - type: ovs_bridge
+            name: {{ neutron_physical_bridge_name }}
+            mtu: {{ min_viable_mtu }}
+            use_dhcp: false
+            dns_servers: {{ ctlplane_dns_nameservers }}
+            domain: {{ dns_search_domains }}
+            addresses:
+            - ip_netmask: {{ ctlplane_ip }}/{{ ctlplane_cidr }}
+            routes: {{ ctlplane_host_routes }}
+            members:
+            - type: linux_bond
+              name: bond1
+              bonding_options: "mode=802.3ad lacp_rate=fast updelay=1000 miimon=100 xmit_hash_policy=layer3+4"
+              use_dhcp: false
+              members:
+              - type: interface
+                name: ens1f0
+                primary: true
+              - type: interface
+                name: ens1f1
+          {% for network in nodeset_networks %}
+            - type: vlan
+              mtu: {{ lookup('vars', networks_lower[network] ~ '_mtu') }}
+              vlan_id: {{ lookup('vars', networks_lower[network] ~ '_vlan_id') }}
+              addresses:
+              - ip_netmask:
+                  {{ lookup('vars', networks_lower[network] ~ '_ip') }}/{{ lookup('vars', networks_lower[network] ~ '_cidr') }}
+              routes: {{ lookup('vars', networks_lower[network] ~ '_host_routes') }}
+          {% endfor %}
+  nodes:
+    edpm-compute-0: 
+      hostName: edpm-compute-0
+      ansible:
+        ansibleHost: 172.20.138.101
+        ansibleUser: cloud-admin
+        ansibleVars:
+          fqdn_internal_api: edpm-compute-0.openinfra.rhoso.lab
+      networks: 
+      - name: ctlplane
+        subnetName: subnet1
+        defaultRoute: true
+        fixedIP: 172.20.138.101
+      - name: internalapi
+        subnetName: subnet1
+      - name: storage
+        subnetName: subnet1
+      - name: storagemgmt
+        subnetName: subnet1
+      - name: tenant
+        subnetName: subnet1
+    edpm-compute-1:
+      hostName: edpm-compute-1
+      ansible: 
+        ansibleHost: 172.20.138.102
+        ansibleUser: cloud-admin
+        ansibleVars:
+          fqdn_internal_api: edpm-compute-1.openinfra.rhoso.lab
+      networks:
+      - name: ctlplane
+        subnetName: subnet1
+        defaultRoute: true
+        fixedIP: 172.20.138.102
+      - name: internalapi
+        subnetName: subnet1
+      - name: storage
+        subnetName: subnet1
+      - name: storagemgmt
+        subnetName: subnet1
+      - name: tenant
+        subnetName: subnet1
+    edpm-compute-2:
+      hostName: edpm-compute-2
+      ansible:
+        ansibleHost: 172.20.138.103
+        ansibleUser: cloud-admin
+        ansibleVars:
+          fqdn_internal_api: edpm-compute-2.openinfra.rhoso.lab
+      networks:
+      - name: ctlplane
+        subnetName: subnet1
+        defaultRoute: true
+        fixedIP: 172.20.138.103
+      - name: internalapi
+        subnetName: subnet1
+      - name: storage
+        subnetName: subnet1
+      - name: storagemgmt
+        subnetName: subnet1
+      - name: tenant
+        subnetName: subnet1

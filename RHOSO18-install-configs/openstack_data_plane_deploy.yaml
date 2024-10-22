@@ -1,0 +1,8 @@
+apiVersion: dataplane.openstack.org/v1beta1
+kind: OpenStackDataPlaneDeployment
+metadata:
+  name: data-plane-deploy
+  namespace: openstack
+spec:
+  nodeSets:
+    - openstack-data-plane

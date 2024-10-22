@@ -1,0 +1,22 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: metal3-provisioning
+spec:
+  nodeSelector: 
+    node-role.kubernetes.io/master: "" 
+  maxUnavailable: 1 
+  desiredState:
+    interfaces:
+    - name: provisioning
+      type: vlan
+      state: up
+      mtu: 1500
+      ipv4:
+        enabled: true
+        dhcp: true
+      ipv6:
+        enabled: false
+      vlan:
+        base-iface: ens1f1
+        id: 1110

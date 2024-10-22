@@ -1,0 +1,17 @@
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: sb-blade-c3-04
+  namespace: openshift-machine-api
+  labels:
+    app: openstack
+spec:
+  automatedCleaningMode: metadata
+  bmc:
+    address: ipmi://172.20.254.38
+    credentialsName: lenovo-blades-bmc-secret
+    disableCertificateVerification: true
+  bootMACAddress: '00:0e:1e:aa:bf:70'
+  bootMode: legacy
+  online: false
+  preprovisioningNetworkDataName: lenovo-blades-nmstate-bond-ospcompute1-secret

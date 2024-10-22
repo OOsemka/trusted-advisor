@@ -1,0 +1,24 @@
+service_type: host
+addr: edpm-compute-0
+hostname: edpm-compute-0
+---
+service_type: host
+addr: edpm-compute-1
+hostname: edpm-compute-1
+---
+service_type: host
+addr: edpm-compute-2
+hostname: edpm-compute-2
+---
+service_type: mon
+placement:
+  host_pattern: "edpm-compute-[0-2]"
+---
+service_type: osd
+service_id: initial_osds
+placement:
+  host_pattern: "edpm-compute-[0-2]"
+data_devices:
+  paths:
+   - /dev/sdb
+

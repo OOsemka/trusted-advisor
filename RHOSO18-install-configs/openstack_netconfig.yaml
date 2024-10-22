@@ -1,0 +1,76 @@
+apiVersion: network.openstack.org/v1beta1
+kind: NetConfig
+metadata:
+  name: openstacknetconfig
+  namespace: openstack
+spec:
+  networks:
+  - name: CtlPlane 
+    dnsDomain: ctlplane.openinfra.rhoso.lab
+    subnets: 
+    - name: subnet1 
+      allocationRanges: 
+      - end: 172.20.138.199
+        start: 172.20.138.150
+      cidr: 172.20.138.0/24
+      gateway: 172.20.138.1
+  - name: InternalApi
+    dnsDomain: internalapi.openinfra.rhoso.lab
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.20.140.250
+        start: 172.20.140.100
+      excludeAddresses: 
+      - 172.20.140.1
+      - 172.20.140.2
+      - 172.20.140.3
+      cidr: 172.20.140.0/24
+      vlan: 1112
+  - name: External
+    dnsDomain: external.openinfra.rhoso.lab
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.20.139.250
+        start: 172.20.139.100
+      cidr: 172.20.139.0/24
+      gateway: 172.20.139.1
+      vlan: 1111
+  - name: Storage
+    dnsDomain: storage.openinfra.rhoso.lab
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.20.142.250
+        start: 172.20.142.100
+      cidr: 172.20.142.0/24
+      vlan: 1114
+  - name: StorageMgmt
+    dnsDomain: storagemgmt.openinfra.rhoso.lab
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.20.143.250
+        start: 172.20.143.100
+      cidr: 172.20.143.0/24
+      vlan: 1115
+  - name: Tenant
+    dnsDomain: tenant.openinfra.rhoso.lab
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.20.141.250
+        start: 172.20.141.100
+      cidr: 172.20.141.0/24
+      vlan: 1113
+  - name: OCprovisioning
+    dnsDomain: ocprovisioning.openinfra.rhoso.lab
+    subnets:
+    - name: subnet1
+      allocationRanges:
+      - end: 172.20.144.250
+        start: 172.20.144.100
+      cidr: 172.20.144.0/24
+      vlan: 1116
+

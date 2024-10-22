@@ -1,0 +1,141 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: internalapi
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "internalapi",
+      "type": "macvlan",
+      "master": "internalapi",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.20.140.0/24",
+        "range_start": "172.20.140.30",
+        "range_end": "172.20.140.70"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: ctlplane
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "ctlplane",
+      "type": "macvlan",
+      "master": "ctlplane",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.20.138.0/24",
+        "range_start": "172.20.138.30",
+        "range_end": "172.20.138.70"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: storage
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "storage",
+      "type": "macvlan",
+      "master": "storage",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.20.142.0/24",
+        "range_start": "172.20.142.30",
+        "range_end": "172.20.142.70"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: storagemgmt
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "storagemgmt",
+      "type": "macvlan",
+      "master": "storagemgmt",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.20.143.0/24",
+        "range_start": "172.20.143.30",
+        "range_end": "172.20.143.70"
+      }
+    }
+
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: tenant
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "tenant",
+      "type": "macvlan",
+      "master": "tenant",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.20.141.0/24",
+        "range_start": "172.20.141.30",
+        "range_end": "172.20.141.70"
+      }
+    }
+---
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: external
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "external",
+      "type": "macvlan",
+      "master": "external",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.20.139.0/24",
+        "range_start": "172.20.139.30",
+        "range_end": "172.20.139.70"
+      }
+    }
+--- 
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: ocprovisioning
+  namespace: openstack
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "name": "ocprovisioning",
+      "type": "macvlan",
+      "master": "ocprovisioning",
+      "ipam": {
+        "type": "whereabouts",
+        "range": "172.20.144.0/24",
+        "range_start": "172.20.144.30",
+        "range_end": "172.20.144.70"
+      }
+    }
+
