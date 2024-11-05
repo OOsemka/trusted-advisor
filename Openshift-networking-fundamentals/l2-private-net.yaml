@@ -1,0 +1,15 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: chrisj-private-net1
+  namespace: chrisj
+spec:
+  config: |2
+    {
+            "cniVersion": "0.3.1", 
+            "name": "chrisj-private-net1", 
+            "type": "ovn-k8s-cni-overlay", 
+            "topology":"layer2", 
+            "mtu": 1300, 
+            "netAttachDefName": "chrisj/chrisj-private-net1" 
+    }

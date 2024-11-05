@@ -1,0 +1,18 @@
+interfaces:
+  - name: <nic1_name>
+    type: ethernet
+    state: up
+    ipv4:
+      address:
+      - ip: <ip_address>
+        prefix-length: 24
+      enabled: true
+dns-resolver:
+  config:
+    server:
+    - <dns_ip_address>
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: <next_hop_ip_address>
+    next-hop-interface: <next_hop_nic1_name>

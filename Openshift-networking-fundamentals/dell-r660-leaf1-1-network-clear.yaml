@@ -1,0 +1,29 @@
+interfaces:
+- ipv4:
+    dhcp: false
+    enabled: true
+    address:
+    - ip: 172.21.0.11
+      prefix-length: 24
+  ipv6:
+    enabled: false
+  link-aggregation:
+    mode: 802.3ad
+    options:
+      miimon: "100"
+    port:
+    - eno12399np0
+    - eno12409np1
+  name: bond0
+  state: up
+  type: bond
+dns-resolver:
+  config:
+    server:
+    - 172.20.129.10
+routes:
+  config:
+  - destination: 0.0.0.0/0
+    next-hop-address: 172.21.0.1
+    next-hop-interface: bond0
+    table-id: 254
