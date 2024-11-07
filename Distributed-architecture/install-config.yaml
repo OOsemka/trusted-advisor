@@ -1,0 +1,29 @@
+apiVersion: v1
+baseDomain: openinfra.lab
+compute:
+- architecture: amd64
+  hyperthreading: Enabled
+  name: worker
+  replicas: 3
+controlPlane:
+  architecture: amd64
+  hyperthreading: Enabled
+  name: master
+  replicas: 3
+metadata:
+  name: distributed
+networking:
+  clusterNetwork:
+  - cidr: 10.128.0.0/14
+    hostPrefix: 23
+  machineNetwork:
+  - cidr: 172.20.0.0/16
+  networkType: OVNKubernetes 
+  serviceNetwork:
+  - 172.30.0.0/16
+platform:
+  none:
+    loadBalancer:
+      type: UserManaged
+pullsecret: '{"auths":{"cloud.openshift.c...}}}'
+sshKey: 'ssh-rsa AAAAB...'

@@ -1,0 +1,180 @@
+apiVersion: v1alpha1
+kind: AgentConfig
+metadata:
+  name: distributed
+rendezvousIP: 172.20.2.11
+hosts:
+  - hostname: control-az1
+    role: master
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:90:FA:D7:B6:2A
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          mtu: 9000
+          type: ethernet
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.2.11
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.2.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: control-az2
+    role: master
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:90:FA:EA:F4:A6
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          mtu: 9000
+          type: ethernet
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.70.11
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.70.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: control-az3
+    role: master
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:0e:1e:aa:d8:f0
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          mtu: 9000
+          type: ethernet
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.136.11
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.136.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: compute-az1-1
+    role: worker
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:0E:1E:AA:C4:20
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          mtu: 9000
+          type: ethernet
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.2.21
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.2.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: compute-az2-1
+    role: worker
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:90:FA:D7:B7:7E
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          mtu: 9000
+          type: ethernet
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.70.21
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.70.1
+            next-hop-interface: ens1f0
+            table-id: 254
+  - hostname: compute-az3-1
+    role: worker
+    interfaces:
+      - name: ens1f0
+        macAddress: 00:0E:1E:AA:BF:30
+    rootDeviceHints:
+      deviceName: /dev/sda
+    networkConfig:
+      interfaces:
+        - name: ens1f0
+          mtu: 9000
+          type: ethernet
+          state: up
+          ipv4:
+            enabled: true
+            address:
+              - ip: 172.20.136.21
+                prefix-length: 24
+            dhcp: false
+      dns-resolver:
+        config:
+          server:
+            - 172.20.129.10
+      routes:
+        config:
+          - destination: 0.0.0.0/0
+            next-hop-address: 172.20.136.1
+            next-hop-interface: ens1f0
+            table-id: 254
