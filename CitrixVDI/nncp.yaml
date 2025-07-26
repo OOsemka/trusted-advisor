@@ -1,0 +1,30 @@
+apiVersion: nmstate.io/v1
+kind: NodeNetworkConfigurationPolicy
+metadata:
+  name: linux-br2-bond0-2112-policy 
+spec:
+  desiredState:
+    interfaces:
+      - description: Interface for VLAN 2112 (Citrix VDI Linux Bridge 172.22.12.0/22)
+        ipv4:
+          enabled: false
+        ipv6:
+          enabled: false
+        name: bond0.2112
+        state: up
+        type: vlan
+        vlan:
+          base-iface: bond0
+          id: 2112
+      - name: br2.2112
+        description: Linux bridge with bond0.2112 as a port 
+        type: linux-bridge 
+        state: up 
+        ipv4:
+          enabled: false 
+        bridge:
+          options:
+            stp:
+              enabled: false 
+          port:
+            - name: bond0.2112
