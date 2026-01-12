@@ -1,0 +1,59 @@
+FROM nvidia/cuda:11.8.0-base-ubi8
+
+# Set Maxwell-specific environment and force Python to look in common paths
+ENV TORCH_CUDA_ARCH_LIST="5.2" \
+    PYTHON_VERSION=3.9 \
+    HOME=/opt/app-root/src \
+    PYTHONPATH="/usr/local/lib/python3.9/site-packages:/opt/app-root/src/.local/lib/python3.9/site-packages"
+
+USER 0
+
+# Set these so the NVIDIA Operator knows to inject the driver libraries
+ENV NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+    LD_LIBRARY_PATH="/usr/local/nvidia/lib:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}"
+
+# Ensure the bin directory for injected tools is in the PATH
+ENV PATH="/usr/local/nvidia/bin:${PATH}"
+
+# Install GCC, Python Devel, and Pip
+RUN dnf install -y python39 python39-devel python39-pip gcc gcc-c++ make git && \
+    dnf clean all
+
+# CRITICAL: Install as ROOT into the system-wide site-packages
+# This ensures /usr/bin/python3 -m jupyter works for any user
+RUN python3 -m pip install --upgrade pip && \
+    python3 -m pip install --no-cache-dir \
+    torch==1.13.1+cu117 \
+    torchvision==0.14.1+cu117 \
+    --extra-index-url https://download.pytorch.org/whl/cu117
+
+RUN python3 -m pip install --no-cache-dir jupyterlab
+
+# Setup workspace and permissions
+WORKDIR /opt/app-root/src
+RUN chown -R 1001:0 /opt/app-root/src && \
+    chmod -R g+w /opt/app-root/src
+
+# Point PyTorch to look in the standard path first (ignoring compat)
+ENV LD_LIBRARY_PATH="/usr/lib64:/usr/local/nvidia/lib64:${LD_LIBRARY_PATH}"
+
+# Switch to the OpenShift AI user for the final runtime
+USER 1001
+
+# Fail-safe Entrypoint using the absolute path to the module
+#ENTRYPOINT ["python3", "-m", "jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root"]
+#ENTRYPOINT ["python3", "-m", "jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--ServerApp.base_url=/notebook/${PROJECT_NAME}/${NOTEBOOK_NAME}", "--ServerApp.token=''", "--ServerApp.password=''"]
+# Use a shell to expand the variables correctly at runtime
+#ENTRYPOINT ["sh", "-c", "python3 -m jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --allow-root --ServerApp.base_url=/notebook/${PROJECT_NAME}/${NOTEBOOK_NAME} --ServerApp.token='' --ServerApp.password=''"]
+# Dynamic Entrypoint: Variables are expanded by 'sh' at runtime
+#ENTRYPOINT ["python3", "-m", "jupyter", "lab", "--ip=0.0.0.0", "--port=8888", "--no-browser", "--allow-root", "--ServerApp.base_url=/notebook/chrisj/simple-gpu-test", "--ServerApp.token=''", "--ServerApp.password=''"]
+ENTRYPOINT python3 -m jupyter lab \
+    --ip=0.0.0.0 \
+    --port=8888 \
+    --no-browser \
+    --allow-root \
+    --ServerApp.base_url=${NB_PREFIX} \
+    --ServerApp.token='' \
+    --ServerApp.password='' \
+    --ServerApp.allow_origin='*'

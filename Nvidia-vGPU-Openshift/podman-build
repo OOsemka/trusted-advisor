@@ -1,0 +1,28 @@
+Virtual Machines:
+
+podman build --pull \
+    --platform=linux/amd64 \
+    --tag quay-quay-quay.apps.lab-gpu.openinfra.lab/cjanisze/nvidia/vgpu-manager:535.274.03-rhel9.6 \
+    --build-arg DRIVER_BRANCH="535" \
+    --build-arg DRIVER_VERSION="535.274.03" \
+    --build-arg GOLANG_VERSION="1.25.5" \
+    --build-arg CVE_UPDATES="" \
+    --build-arg CUDA_VERSION="" \
+    --file vgpu-manager/rhel9/Dockerfile \
+    vgpu-manager/rhel9
+
+
+Containers:
+
+podman build \
+  --pull \
+  --platform=linux/amd64 \
+  --tag quay-quay-quay.apps.lab-gpu.openinfra.lab/cjanisze/nvidia/driver:535.274.02-rhel9 \
+  --build-arg DRIVER_TYPE=vgpu \
+  --build-arg VGPU_LICENSE_SERVER_TYPE=NLS \
+  --build-arg DRIVER_VERSION="535.274.02-grid" \
+  --build-arg DRIVER_BRANCH="535" \
+  --build-arg GOLANG_VERSION="1.25.5" \
+  --build-arg CVE_UPDATES="" \
+  --file /home/cjanisze/Documents/projects/OCP-virt/GPU-OCP/nvidia/4.19/containers/gpu-driver-container/rhel9/Dockerfile \
+  rhel9

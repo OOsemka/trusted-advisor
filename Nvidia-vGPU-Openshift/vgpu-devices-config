@@ -1,0 +1,16 @@
+config.yaml:
+
+version: v1
+vgpu-configs:
+  M10-8Q:
+    - devices: all
+      vgpu-devices:
+        M10-8Q: 1
+  M10-4Q:
+    - devices: all
+      vgpu-devices:
+        M10-4Q: 2
+  M10-2Q:
+    - devices: all
+      vgpu-devices:
+        M10-2Q: 4

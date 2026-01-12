@@ -1,0 +1,113 @@
+apiVersion: nvidia.com/v1
+kind: ClusterPolicy
+metadata:
+  name: gpu-cluster-policy
+spec:
+  vgpuDeviceManager:
+    config:
+      default: default
+      name: vgpu-devices-config
+    enabled: true
+  migManager:
+    config:
+      default: all-disabled
+      name: default-mig-parted-config
+    enabled: true
+  operator:
+    defaultRuntime: crio
+    initContainer: {}
+    runtimeClass: nvidia
+    use_ocp_driver_toolkit: true
+  dcgm:
+    enabled: true
+  gfd:
+    enabled: true
+  dcgmExporter:
+    config:
+      name: ''
+    enabled: true
+    serviceMonitor:
+      enabled: true
+  cdi:
+    default: false
+    enabled: true
+  driver:
+    licensingConfig:
+      nlsEnabled: true
+      secretName: licensing-config
+    enabled: true
+    kernelModuleType: auto
+    certConfig:
+      name: ''
+    repository: quay-quay-quay.apps.lab-gpu.openinfra.lab/cjanisze/nvidia
+    useNvidiaDriverCRD: false
+    kernelModuleConfig:
+      name: ''
+    upgradePolicy:
+      autoUpgrade: true
+      drain:
+        deleteEmptyDir: false
+        enable: false
+        force: false
+        timeoutSeconds: 300
+      maxParallelUpgrades: 1
+      maxUnavailable: 25%
+      podDeletion:
+        deleteEmptyDir: false
+        force: false
+        timeoutSeconds: 300
+      waitForCompletion:
+        timeoutSeconds: 0
+    repoConfig:
+      configMapName: ''
+    version: 535.274.02
+    virtualTopology:
+      config: ''
+    image: driver
+  devicePlugin:
+    config:
+      default: ''
+      name: ''
+    enabled: true
+    mps:
+      root: /run/nvidia/mps
+  gdrcopy:
+    enabled: false
+  kataManager:
+    config:
+      artifactsDir: /opt/nvidia-gpu-operator/artifacts/runtimeclasses
+  mig:
+    strategy: single
+  sandboxDevicePlugin:
+    enabled: false
+  validator:
+    plugin:
+      env:
+        - name: WITH_WORKLOAD
+          value: 'true'
+  nodeStatusExporter:
+    enabled: true
+  daemonsets:
+    rollingUpdate:
+      maxUnavailable: '1'
+    updateStrategy: RollingUpdate
+  sandboxWorkloads:
+    defaultWorkload: vm-vgpu
+    enabled: true
+  gds:
+    enabled: false
+  vgpuManager:
+    enabled: true
+    image: ocp-nvidia-vgpu-installer
+    imagePullSecrets:
+      - private-registry-secret
+    repository: quay-quay-quay.apps.lab-gpu.openinfra.lab/cjanisze/nvidia
+    version: 535.274.03
+  vfioManager:
+    enabled: false
+  toolkit:
+    enabled: true
+    env:
+      - name: NVIDIA_VISIBLE_DEVICES_AS_GPU_RESOURCES
+        value: '1'
+    installDir: /usr/local/nvidia
